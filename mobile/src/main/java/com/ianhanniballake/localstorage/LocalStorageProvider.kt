@@ -18,14 +18,16 @@ import android.provider.DocumentsContract
 import android.provider.DocumentsContract.Document
 import android.provider.DocumentsContract.Root
 import android.provider.DocumentsProvider
-import android.support.v4.content.ContextCompat
-import android.support.v4.os.EnvironmentCompat
+import androidx.core.content.ContextCompat
+import androidx.core.os.EnvironmentCompat
 import android.util.Log
 import android.webkit.MimeTypeMap
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.Paths
 
 class LocalStorageProvider : DocumentsProvider() {
 
@@ -127,18 +129,17 @@ class LocalStorageProvider : DocumentsProvider() {
         if (LocalStorageProvider.isMissingPermission(context)) {
             return null
         }
-        val newFile = File(parentDocumentId, displayName)
-        try {
-            if (newFile.createNewFile()) {
-                return newFile.absolutePath
+        val path = Paths.get(parentDocumentId, displayName)
+        return try {
+            if (mimeType == Document.MIME_TYPE_DIR) {
+                Files.createDirectory(path).toAbsolutePath().toString()
             } else {
-                Log.e(TAG, "Error creating new file $newFile")
+                Files.createFile(path).toAbsolutePath().toString()
             }
         } catch (e: IOException) {
-            Log.e(TAG, "Error creating new file $newFile")
+            Log.e(TAG, "Error creating $path", e)
+            null
         }
-
-        return null
     }
 
     @Throws(FileNotFoundException::class)

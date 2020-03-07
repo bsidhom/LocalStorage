@@ -3,18 +3,18 @@ package com.ianhanniballake.localstorage
 import android.app.Activity
 import android.app.Application
 import android.app.Dialog
-import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.support.annotation.LayoutRes
-import android.support.v4.app.DialogFragment
-import android.support.v7.app.AlertDialog
+import androidx.fragment.app.DialogFragment
+import androidx.appcompat.app.AlertDialog
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.core.content.withStyledAttributes
-import androidx.core.widget.toast
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
@@ -102,7 +102,7 @@ class DonateDialogFragment : DialogFragment() {
         }
         viewModel.purchaseCompletedCallback = { responseCode ->
             if (responseCode == BillingClient.BillingResponse.OK) {
-                requireContext().toast(R.string.donate_thank_you)
+                Toast.makeText(requireContext(), "Thank you for your donation!", Toast.LENGTH_SHORT)
             }
             dismiss()
         }
